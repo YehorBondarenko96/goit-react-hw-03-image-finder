@@ -19,9 +19,15 @@ export class App extends Component {
 
 
     try {
-      const results = await fetchForSearch(this.intV, this.page);
+      const messyResults = await fetchForSearch(this.intV, this.page);
       console.log(1);
-      this.setState({ results });
+      this.setState((state) => ({
+        results: [messyResults.map(messyResult => ({
+          id: messyResult.id, 
+          webformatURL: messyResult.webformatURL, 
+          largeImageURL: messyResult.largeImageURL
+        }))]
+      }));
     } catch (error) {
       console.log(2);
       this.setState({ error });
