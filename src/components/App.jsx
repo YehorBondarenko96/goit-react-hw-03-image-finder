@@ -52,13 +52,23 @@ export class App extends Component {
 
     try {
       const messyResults = await fetchForSearch(this.state.intV, this.state.page);
-      this.setState((state) => ({
-        results: messyResults.map(messyResult => ({
-          id: messyResult.id, 
-          webformatURL: messyResult.webformatURL, 
-          largeImageURL: messyResult.largeImageURL
-        }))
-      }));
+      if(this.state.intV === prevState.intV){
+        this.setState((prevState) => ({
+          results: [...prevState.results, ...messyResults.map(messyResult => ({
+            id: messyResult.id, 
+            webformatURL: messyResult.webformatURL, 
+            largeImageURL: messyResult.largeImageURL
+          }))]
+        }));
+      } else{
+        this.setState((state) => ({
+          results: messyResults.map(messyResult => ({
+            id: messyResult.id, 
+            webformatURL: messyResult.webformatURL, 
+            largeImageURL: messyResult.largeImageURL
+          }))
+        }));
+      }
     } catch (error) {
       this.setState({ error });
     } finally {
