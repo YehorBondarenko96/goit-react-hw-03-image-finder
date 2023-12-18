@@ -1,4 +1,5 @@
 import css from './Styles.module.css';
+import { Bars } from 'react-loader-spinner';
 import { Component } from 'react';
 import fetchForSearch from '../services/api';
 import { Searchbar } from "./Searchbar/Searchbar";
@@ -60,12 +61,26 @@ export class App extends Component {
   };
 
   render () {
-    const results = this.state.results;
+    const {results, isLoading} = this.state;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.inputValue}/>
-        {results.length > 0 &&
-        <ImageGellery results={results}/>}
+        {isLoading ? (
+        <div className={css.spiner}>
+        <Bars
+          height="80"
+          width="80"
+          color="#3f51b5"
+          ariaLabel="bars-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
+        </div>
+        ) : (
+          results.length > 0 &&
+          <ImageGellery results={results}/>
+          )}
       </div>
     );
   }
