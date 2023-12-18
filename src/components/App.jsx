@@ -9,19 +9,15 @@ export class App extends Component {
     results: [],
     isLoading: false,
     error: null,
+    intV: '',
+    page: 1
   };
-
-  intV = '';
-  page = 1;
-
 
   async componentDidMount() {
     this.setState({ isLoading: true });
 
-
     try {
-      const messyResults = await fetchForSearch(this.intV, this.page);
-      console.log(1);
+      const messyResults = await fetchForSearch(this.state.intV, this.page);
       this.setState((state) => ({
         results: messyResults.map(messyResult => ({
           id: messyResult.id, 
@@ -30,7 +26,6 @@ export class App extends Component {
         }))
       }));
     } catch (error) {
-      console.log(2);
       this.setState({ error });
     } finally {
       this.setState({ isLoading: false });
@@ -39,9 +34,31 @@ export class App extends Component {
 
   inputValue = (evt) => {
     evt.preventDefault();
-    this.intV = evt.currentTarget.elements.search.value;
-    console.log(this.intV);
+    const intV = evt.currentTarget.elements.search.value;
+    this.setState({intV})
   }
+
+  async componentDidUpdate(prevProps, prevState){
+    if(this.state.intV !== prevState.intV){
+      this.setState({ isLoading: true });
+
+    try {
+      const messyResults = await fetchForSearch(this.state.intV, this.page);
+      this.setState((state) => ({
+        results: messyResults.map(messyResult => ({
+          id: messyResult.id, 
+          webformatURL: messyResult.webformatURL, 
+          largeImageURL: messyResult.largeImageURL
+        }))
+      }));
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+    }
+  };
+
   render () {
     const results = this.state.results;
     return (
