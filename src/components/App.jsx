@@ -1,16 +1,18 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
+import css from './Styles.module.css';
+import { Component } from 'react';
+import { Searchbar } from "./Searchbar/Searchbar";
+
+export class App extends Component {
+  inputValue = (evt) => {
+    evt.preventDefault();
+    const intV = evt.currentTarget.elements.search.value;
+    console.log(intV);
+  }
+  render () {
+    return (
+      <div className={css.App}>
+        <Searchbar onSubmit={this.inputValue}/>
+      </div>
+    );
+  }
 };
