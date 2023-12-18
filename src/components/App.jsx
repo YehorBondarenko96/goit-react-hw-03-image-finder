@@ -4,6 +4,7 @@ import { Component } from 'react';
 import fetchForSearch from '../services/api';
 import { Searchbar } from "./Searchbar/Searchbar";
 import { ImageGellery } from './ImageGallery/ImageGallery';
+import { LoadMore } from './LoadMore/LoadMore';
 
 export class App extends Component {
   state = {
@@ -18,7 +19,7 @@ export class App extends Component {
     this.setState({ isLoading: true });
 
     try {
-      const messyResults = await fetchForSearch(this.state.intV, this.page);
+      const messyResults = await fetchForSearch(this.state.intV, this.state.page);
       this.setState((state) => ({
         results: messyResults.map(messyResult => ({
           id: messyResult.id, 
@@ -37,14 +38,20 @@ export class App extends Component {
     evt.preventDefault();
     const intV = evt.currentTarget.elements.search.value;
     this.setState({intV})
-  }
+  };
+
+  forLoadMore = () => {
+    this.setState((prevState) => ({
+      page: prevState.page + 1
+    }))
+  };
 
   async componentDidUpdate(prevProps, prevState){
-    if(this.state.intV !== prevState.intV){
+    if(this.state.intV !== prevState.intV || this.state.page !== prevState.page){
       this.setState({ isLoading: true });
 
     try {
-      const messyResults = await fetchForSearch(this.state.intV, this.page);
+      const messyResults = await fetchForSearch(this.state.intV, this.state.page);
       this.setState((state) => ({
         results: messyResults.map(messyResult => ({
           id: messyResult.id, 
@@ -79,7 +86,10 @@ export class App extends Component {
         </div>
         ) : (
           results.length > 0 &&
+          <>
           <ImageGellery results={results}/>
+          <LoadMore onClick={this.forLoadMore}/>
+          </>
           )}
       </div>
     );
