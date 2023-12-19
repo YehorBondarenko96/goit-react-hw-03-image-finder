@@ -16,7 +16,8 @@ export class App extends Component {
     intV: '',
     page: 1,
     isModal: false,
-    bigImg: null
+    bigImg: null,
+    scrollPositionY: 0
   };
 
   async componentDidMount() {
@@ -44,8 +45,10 @@ export class App extends Component {
   };
 
   forLoadMore = () => {
+    const scrollPositionY = window.scrollY;
     this.setState((prevState) => ({
-      page: prevState.page + 1
+      page: prevState.page + 1,
+      scrollPositionY: scrollPositionY
     }))
   };
 
@@ -101,6 +104,10 @@ export class App extends Component {
       this.setState({ isLoading: false });
     }
     }
+
+    if(this.state.scrollPositionY > 0){
+      window.scroll(0, this.state.scrollPositionY + 520)
+    };
   };
 
   render () {
