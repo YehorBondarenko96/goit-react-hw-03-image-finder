@@ -5,6 +5,7 @@ import fetchForSearch from '../services/api';
 import { Searchbar } from "./Searchbar/Searchbar";
 import { ImageGellery } from './ImageGallery/ImageGallery';
 import { LoadMore } from './LoadMore/LoadMore';
+import { Modal } from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -12,12 +13,13 @@ export class App extends Component {
     isLoading: false,
     error: null,
     intV: '',
-    page: 1
+    page: 1,
+    isModal: false,
+    bigImg: null
   };
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-
     try {
       const messyResults = await fetchForSearch(this.state.intV, this.state.page);
       this.setState((state) => ({
@@ -44,6 +46,29 @@ export class App extends Component {
     this.setState((prevState) => ({
       page: prevState.page + 1
     }))
+  };
+
+  openModal = (id) => {
+    document.addEventListener('keydown', this.closeForEsc);
+    const bigImg = this.state.results.find(result => result.id === id);
+    this.setState({
+      isModal: true, 
+      bigImg: bigImg
+    })
+  };
+
+  closeModal = () => {
+    document.removeEventListener('keydown', this.closeForEsc);
+    this.setState({
+      isModal: false,
+      bigImg: null
+    })
+  };
+
+  closeForEsc = (evt) => {
+    if (evt.key === 'Escape') {
+      this.closeModal();
+    }
   };
 
   async componentDidUpdate(prevProps, prevState){
@@ -78,10 +103,11 @@ export class App extends Component {
   };
 
   render () {
-    const {results, isLoading} = this.state;
+    const {results, isLoading, isModal, bigImg} = this.state;
     return (
       <div className={css.App}>
-        <Searchbar onSubmit={this.inputValue}/>
+        {isModal && <Modal bigImg={bigImg} closeModal={this.closeModal}/>}
+          <Searchbar onSubmit={this.inputValue}/>
         {isLoading ? (
         <div className={css.spiner}>
         <Bars
@@ -97,7 +123,7 @@ export class App extends Component {
         ) : (
           results.length > 0 &&
           <>
-          <ImageGellery results={results}/>
+          <ImageGellery results={results} openModal={this.openModal}/>
           <LoadMore onClick={this.forLoadMore}/>
           </>
           )}
