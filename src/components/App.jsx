@@ -41,7 +41,11 @@ export class App extends Component {
   inputValue = (evt) => {
     evt.preventDefault();
     const intV = evt.currentTarget.elements.search.value;
-    this.setState({intV})
+    this.setState({
+      intV,
+      page: 1,
+      scrollPositionY: 0
+    })
   };
 
   forLoadMore = () => {
@@ -106,7 +110,7 @@ export class App extends Component {
     }
 
     if(this.state.scrollPositionY > 0){
-      window.scroll(0, this.state.scrollPositionY + 520)
+      window.scroll(0, this.state.scrollPositionY + 628)
     };
   };
 
