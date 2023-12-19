@@ -6,6 +6,7 @@ import { Searchbar } from "./Searchbar/Searchbar";
 import { ImageGellery } from './ImageGallery/ImageGallery';
 import { LoadMore } from './LoadMore/LoadMore';
 import { Modal } from './Modal/Modal';
+import { Error } from './Error/Error';
 
 export class App extends Component {
   state = {
@@ -103,10 +104,14 @@ export class App extends Component {
   };
 
   render () {
-    const {results, isLoading, isModal, bigImg} = this.state;
+    const {results, isLoading, isModal, bigImg, error} = this.state;
     return (
       <div className={css.App}>
-        {isModal && <Modal bigImg={bigImg} closeModal={this.closeModal}/>}
+        {error ? (
+          <Error/>
+        ) : (
+          <>
+          {isModal && <Modal bigImg={bigImg} closeModal={this.closeModal}/>}
           <Searchbar onSubmit={this.inputValue}/>
         {isLoading ? (
         <div className={css.spiner}>
@@ -127,6 +132,9 @@ export class App extends Component {
           <LoadMore onClick={this.forLoadMore}/>
           </>
           )}
+          </>
+        )
+      }
       </div>
     );
   }
