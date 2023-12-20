@@ -20,23 +20,23 @@ export class App extends Component {
     scrollPositionY: 0
   };
 
-  async componentDidMount() {
-    this.setState({ isLoading: true });
-    try {
-      const messyResults = await fetchForSearch(this.state.intV, this.state.page);
-      this.setState((state) => ({
-        results: messyResults.map(messyResult => ({
-          id: messyResult.id, 
-          webformatURL: messyResult.webformatURL, 
-          largeImageURL: messyResult.largeImageURL
-        }))
-      }));
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  };
+  // async componentDidMount() {
+  //   this.setState({ isLoading: true });
+  //   try {
+  //     const messyResults = await fetchForSearch(this.state.intV, this.state.page);
+  //     this.setState((state) => ({
+  //       results: messyResults.map(messyResult => ({
+  //         id: messyResult.id, 
+  //         webformatURL: messyResult.webformatURL, 
+  //         largeImageURL: messyResult.largeImageURL
+  //       }))
+  //     }));
+  //   } catch (error) {
+  //     this.setState({ error });
+  //   } finally {
+  //     this.setState({ isLoading: false });
+  //   }
+  // };
 
   inputValue = (evt) => {
     evt.preventDefault();
@@ -80,7 +80,7 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState){
-    if(this.state.intV !== prevState.intV || this.state.page !== prevState.page){
+    if(this.state.intV.length > 0 && (this.state.intV !== prevState.intV || this.state.page !== prevState.page)){
       this.setState({ isLoading: true });
 
     try {
@@ -107,6 +107,8 @@ export class App extends Component {
     } finally {
       this.setState({ isLoading: false });
     }
+    } else if(prevState.results.length > 0 && this.state.intV.length === 0) {
+      this.setState({ results: [] })
     }
 
     if(this.state.scrollPositionY > 0){
@@ -125,7 +127,7 @@ export class App extends Component {
           {isModal && <Modal bigImg={bigImg} closeModal={this.closeModal}/>}
           <Searchbar onSubmit={this.inputValue}/>
         {isLoading ? (
-        <div className={css.spiner}>
+        <div className={results.length > 0 ? css.spinerWithResults : css.spinerWithoutResults}>
         <Bars
           height="80"
           width="80"
