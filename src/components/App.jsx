@@ -20,24 +20,6 @@ export class App extends Component {
     scrollPositionY: 0
   };
 
-  // async componentDidMount() {
-  //   this.setState({ isLoading: true });
-  //   try {
-  //     const messyResults = await fetchForSearch(this.state.intV, this.state.page);
-  //     this.setState((state) => ({
-  //       results: messyResults.map(messyResult => ({
-  //         id: messyResult.id, 
-  //         webformatURL: messyResult.webformatURL, 
-  //         largeImageURL: messyResult.largeImageURL
-  //       }))
-  //     }));
-  //   } catch (error) {
-  //     this.setState({ error });
-  //   } finally {
-  //     this.setState({ isLoading: false });
-  //   }
-  // };
-
   inputValue = (evt) => {
     evt.preventDefault();
     const intV = evt.currentTarget.elements.search.value;
@@ -127,7 +109,7 @@ export class App extends Component {
           {isModal && <Modal bigImg={bigImg} closeModal={this.closeModal}/>}
           <Searchbar onSubmit={this.inputValue}/>
         {isLoading ? (
-        <div className={results.length > 0 ? css.spinerWithResults : css.spinerWithoutResults}>
+        <div className={css.spinerWithoutResults}>
         <Bars
           height="80"
           width="80"
